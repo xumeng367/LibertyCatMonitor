@@ -1,0 +1,92 @@
+package com.libertycat.kmp.demo.task
+
+import com.libertycat.kmp.demo.netwrok.NetWorkResult
+import com.libertycat.kmp.demo.netwrok.OkxHttpRepository
+import com.libertycat.kmp.demo.netwrok.SalesCat
+import com.libertycat.kmp.demo.netwrok.Trade
+import com.libertycat.kmp.demo.sms.SmsManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.collections.filter
+import kotlin.collections.isNotEmpty
+import kotlin.collections.maxBy
+import kotlin.collections.sortedByDescending
+
+
+var lastTradesHistory: NetWorkResult<Trade>? = null//上次交易记录
+var lastSalesCatList: NetWorkResult<SalesCat>? = null//上次交易记录
+
+var tradeQueryLog = ""
+var staartInit = false;
+fun startQueryTradesHistoryTask() {
+    if (staartInit) {
+        return
+    }
+    staartInit = true
+    val scope = CoroutineScope(Dispatchers.Default)
+    var count = 0
+    scope.launch {
+        delay(10000)
+        while (true) {
+            delay(2000) // 每5秒执行一次
+            println("执行成交信息查询...$count")
+            // 在这里放置你的协程任务代码
+            val tradesHistory = OkxHttpRepository.queryTradesHistory()
+            val lastTradesData = lastTradesHistory?.data?.data
+            val currentTradesData = tradesHistory?.data?.data
+            if (lastTradesData != null && currentTradesData != null && lastTradesData.isNotEmpty() && currentTradesData.isNotEmpty()) {
+                val lastLatestTrade = lastTradesData.maxBy { it.timestamp }
+                val newTrades = currentTradesData.filter { it.timestamp > lastLatestTrade.timestamp }
+                println("lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}")
+                tradeQueryLog =
+                    "count = $count, lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}"
+                if (newTrades.isNotEmpty()) {
+                    println("发现新成交记录：" + newTrades.joinToString())
+                    SmsManager.sendNewTradesSms(newTrades)
+                } else {
+//                    println("历史最新：$lastLatestTrade")
+                }
+            }
+            count++
+            lastTradesHistory = tradesHistory;
+        }
+    }
+}
+
+fun startQueryOnSalesListTask() {
+    val scope = CoroutineScope(Dispatchers.Default)
+    var count = 0
+    scope.launch {
+        delay(9000)
+        while (true) {
+            delay(2000) // 每5秒执行一次
+            println("执行上架信息查询...$count")
+            // 在这里放置你的协程任务代码
+            val currentOnSalesCatList = OkxHttpRepository.queryOnSalesList()
+            val lastOnSalesCatData = lastSalesCatList?.data?.data
+            if (lastOnSalesCatData != null) {
+                lastOnSalesCatData.sortedByDescending { it.updateTime }
+            }
+            val currentOnSalesData = currentOnSalesCatList?.data?.data
+            if (lastOnSalesCatData != null && currentOnSalesData != null && lastOnSalesCatData.isNotEmpty() && currentOnSalesData.isNotEmpty()) {
+                val lastLatestOnSaleCat = lastOnSalesCatData.maxBy { it.updateTime }
+                val newTrades = currentOnSalesData.filter { it.updateTime > lastLatestOnSaleCat.updateTime }
+                println("lastLatestOnSaleCat = isSellOrder = ${lastLatestOnSaleCat.isSellOrder()} currency = ${lastLatestOnSaleCat.currency()} realPrice = ${lastLatestOnSaleCat.realPrice()} ，新发现：${newTrades.size}")
+//                println("lastOnSalesCatData size = ${lastOnSalesCatData.size} ,  currentOnSalesData size = ${currentOnSalesData.size} ,newTrades = ${newTrades.size}")
+//                println("newTrades: ${newTrades.joinToString()}")
+                if (newTrades.isNotEmpty()) {
+                    println("有新猫猫架了：")
+                    println("上架信息动态：" + newTrades.joinToString())
+                    SmsManager.sendNewOnSalesCatSms(newTrades)
+                } else {
+//                    println("历史最新：$lastLatestTrade")
+                }
+            }
+            count++
+            lastSalesCatList = currentOnSalesCatList;
+        }
+    }
+}
+
