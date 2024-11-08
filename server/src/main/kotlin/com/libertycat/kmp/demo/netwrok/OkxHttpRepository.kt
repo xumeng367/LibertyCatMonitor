@@ -3,6 +3,9 @@ package com.libertycat.kmp.demo.netwrok
 //import io.ktor.client.plugins.logging.LogLevel
 //import io.ktor.client.plugins.logging.Logger
 //import io.ktor.client.plugins.logging.Logging
+import com.libertycat.kmp.demo.beans.NetWorkResult
+import com.libertycat.kmp.demo.beans.SalesCat
+import com.libertycat.kmp.demo.beans.Trade
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp

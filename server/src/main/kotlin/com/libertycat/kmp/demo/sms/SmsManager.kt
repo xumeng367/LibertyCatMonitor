@@ -5,11 +5,12 @@ import com.aliyun.auth.credentials.Credential
 import com.aliyun.auth.credentials.provider.StaticCredentialProvider
 import com.aliyun.sdk.service.dysmsapi20170525.AsyncClient
 import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsRequest
-import com.libertycat.kmp.demo.netwrok.CatAttribute
-import com.libertycat.kmp.demo.netwrok.SalesCat
-import com.libertycat.kmp.demo.netwrok.Trade
+import com.libertycat.kmp.demo.beans.CatAttribute
+import com.libertycat.kmp.demo.beans.SalesCat
+import com.libertycat.kmp.demo.beans.Trade
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.libertycat.kmp.demo.smsReceivers
 import darabonba.core.client.ClientOverrideConfiguration
 
 

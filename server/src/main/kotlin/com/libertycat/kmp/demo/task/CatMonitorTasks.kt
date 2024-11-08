@@ -1,9 +1,9 @@
 package com.libertycat.kmp.demo.task
 
-import com.libertycat.kmp.demo.netwrok.NetWorkResult
+import com.libertycat.kmp.demo.beans.NetWorkResult
 import com.libertycat.kmp.demo.netwrok.OkxHttpRepository
-import com.libertycat.kmp.demo.netwrok.SalesCat
-import com.libertycat.kmp.demo.netwrok.Trade
+import com.libertycat.kmp.demo.beans.SalesCat
+import com.libertycat.kmp.demo.beans.Trade
 import com.libertycat.kmp.demo.sms.SmsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,7 @@ fun startQueryTradesHistoryTask() {
         delay(10000)
         while (true) {
             delay(2000) // 每5秒执行一次
-            println("执行成交信息查询...$count")
+            println()
             // 在这里放置你的协程任务代码
             val tradesHistory = OkxHttpRepository.queryTradesHistory()
             val lastTradesData = lastTradesHistory?.data?.data
@@ -39,7 +39,7 @@ fun startQueryTradesHistoryTask() {
             if (lastTradesData != null && currentTradesData != null && lastTradesData.isNotEmpty() && currentTradesData.isNotEmpty()) {
                 val lastLatestTrade = lastTradesData.maxBy { it.timestamp }
                 val newTrades = currentTradesData.filter { it.timestamp > lastLatestTrade.timestamp }
-                println("lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}")
+//                println("执行成交信息查询...$count lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}")
                 tradeQueryLog =
                     "count = $count, lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}"
                 if (newTrades.isNotEmpty()) {
@@ -62,7 +62,7 @@ fun startQueryOnSalesListTask() {
         delay(9000)
         while (true) {
             delay(2000) // 每5秒执行一次
-            println("执行上架信息查询...$count")
+            println()
             // 在这里放置你的协程任务代码
             val currentOnSalesCatList = OkxHttpRepository.queryOnSalesList()
             val lastOnSalesCatData = lastSalesCatList?.data?.data
@@ -73,7 +73,7 @@ fun startQueryOnSalesListTask() {
             if (lastOnSalesCatData != null && currentOnSalesData != null && lastOnSalesCatData.isNotEmpty() && currentOnSalesData.isNotEmpty()) {
                 val lastLatestOnSaleCat = lastOnSalesCatData.maxBy { it.updateTime }
                 val newTrades = currentOnSalesData.filter { it.updateTime > lastLatestOnSaleCat.updateTime }
-                println("lastLatestOnSaleCat = isSellOrder = ${lastLatestOnSaleCat.isSellOrder()} currency = ${lastLatestOnSaleCat.currency()} realPrice = ${lastLatestOnSaleCat.realPrice()} ，新发现：${newTrades.size}")
+                println("执行上架信息查询...$count lastLatestOnSaleCat = isSellOrder = ${lastLatestOnSaleCat.isSellOrder()} currency = ${lastLatestOnSaleCat.currency()} realPrice = ${lastLatestOnSaleCat.realPrice()} ，新发现：${newTrades.size}")
 //                println("lastOnSalesCatData size = ${lastOnSalesCatData.size} ,  currentOnSalesData size = ${currentOnSalesData.size} ,newTrades = ${newTrades.size}")
 //                println("newTrades: ${newTrades.joinToString()}")
                 if (newTrades.isNotEmpty()) {

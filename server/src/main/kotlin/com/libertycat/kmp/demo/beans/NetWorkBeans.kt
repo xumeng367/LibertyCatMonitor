@@ -1,4 +1,4 @@
-package com.libertycat.kmp.demo.netwrok
+package com.libertycat.kmp.demo.beans
 
 import com.libertycat.kmp.demo.web3.tokenAddressToCurrency
 import kotlinx.serialization.*
