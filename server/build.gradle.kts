@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.spring)
     alias(libs.plugins.serialization)
-    id("org.springframework.boot") version "3.3.5"
+    id("org.springframework.boot") version "3.2.6"
     id("io.spring.dependency-management") version "1.1.6"
 }
 
