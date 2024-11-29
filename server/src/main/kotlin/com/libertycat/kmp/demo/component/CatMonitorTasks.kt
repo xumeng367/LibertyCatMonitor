@@ -27,13 +27,14 @@ class CatMonitorTasks {
     var lastSalesCatList: NetWorkResult<SalesCat>? = null//上次交易记录
 
     var tradeQueryLog = ""
-    var staartInit = false;
+    var starQueryTradesInit = false;
+    var starQueryOnSaLESInit = false;
     fun startQueryTradesHistoryTask() {
-        if (staartInit) {
+        if (starQueryTradesInit) {
             println("查询成交服务已启动")
             return
         }
-        staartInit = true
+        starQueryTradesInit = true
         val scope = CoroutineScope(Dispatchers.Default)
         var count = 0
         scope.launch {
@@ -41,7 +42,6 @@ class CatMonitorTasks {
                 delay(2000) // 每5秒执行一次
                 println()
                 // 在这里放置你的协程任务代码
-                println("mailManager = $mailManager")
                 val tradesHistory = OkxHttpRepository.queryTradesHistory()
                 val lastTradesData = lastTradesHistory?.data?.data
                 val currentTradesData = tradesHistory?.data?.data
@@ -66,12 +66,16 @@ class CatMonitorTasks {
     }
 
     fun startQueryOnSalesListTask() {
+        if (starQueryOnSaLESInit) {
+            println("查询上架服务已启动")
+            return
+        }
+        starQueryOnSaLESInit = true
         val scope = CoroutineScope(Dispatchers.Default)
         var count = 0
         scope.launch {
-            delay(9000)
             while (true) {
-                delay(2000) // 每5秒执行一次
+                delay(3000) // 每5秒执行一次
                 println()
                 // 在这里放置你的协程任务代码
                 val currentOnSalesCatList = OkxHttpRepository.queryOnSalesList()
@@ -90,6 +94,8 @@ class CatMonitorTasks {
                         println("有新猫猫架了：")
                         println("上架信息动态：" + newTrades.joinToString())
                         SmsManager.sendNewOnSalesCatSms(newTrades)
+                        mailManager.sendNewOnSalesCatEmails(newTrades)
+
                     } else {
 //                    println("历史最新：$lastLatestTrade")
                     }
@@ -105,14 +111,25 @@ class CatMonitorTasks {
     fun runAfterStartUp() {
         println("Spring启动后，执行成交查询服务")
         startQueryTradesHistoryTask()
+        startQueryOnSalesListTask()
     }
 
 
-    fun testSendTradeMail(): Boolean {
+    fun testSendTradesEmails(): Boolean {
         val data = lastTradesHistory?.data?.data
         if (data != null && data.size > 0) {
             val lastLatestTrade = data.maxBy { it.timestamp }
             return mailManager.sendTradeMail(lastLatestTrade)
+        }
+        return false
+    }
+
+
+    fun testSendOnSalesEmails(): Boolean {
+        val data = lastSalesCatList?.data?.data
+        if (data != null && data.size > 0) {
+            val lastLatestTrade = data.maxBy { it.updateTime }
+            return mailManager.sendNewOnSalesCatEmail(lastLatestTrade)
         }
         return false
     }

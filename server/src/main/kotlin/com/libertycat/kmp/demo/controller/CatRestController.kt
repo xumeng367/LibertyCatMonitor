@@ -71,7 +71,7 @@ class CatRestController {
      */
     @GetMapping("/test/email")
     suspend fun testMails(): Boolean {
-        val result = catMonitorTasks.testSendTradeMail()
+        val result = catMonitorTasks.testSendOnSalesEmails()
         return result
     }
 
