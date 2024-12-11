@@ -47,7 +47,7 @@ class MailManager {
                 // 邮件内容
                 smm.setText(
                     "成交价格：$${trade.realPrice()}!订单信息：From:**${trade.from.takeLast(4)}, to:From:**${
-                        trade.from.takeLast(
+                        trade.to.takeLast(
                             4
                         )
                     }"
@@ -71,31 +71,32 @@ class MailManager {
      * 发送成交邮件
      */
     fun sendNewOnSalesCatEmail(salesCat: SalesCat): Boolean {
-        emailsReceivers.forEach { email ->
-            try {
-                println("发送邮件：$salesCat")
-                val smm: SimpleMailMessage = SimpleMailMessage()
-                // 主题
-                smm.subject = "盯盘喵：有新猫猫#${salesCat.tokenId}上架了"
-                smm.from = "2502849497@qq.com"
-                // 发送日期
-                smm.sentDate = Date() //2022-03-01 10:11:47
-                // 要发给的邮箱(收件人)
-                smm.setTo(email)
-                // 抄送邮箱
-                smm.setCc("442311638@qq.com")
-                // 邮件内容
-                smm.text = "上架价格：$${salesCat.realPrice()}!"
-                javaMailSender?.send(smm)
-                println("上架邮件发送成功:$email")
+//        emailsReceivers.forEach { email ->
+        val email = "442311638@qq.com"
+        try {
+            println("发送邮件：$salesCat")
+            val smm: SimpleMailMessage = SimpleMailMessage()
+            // 主题
+            smm.subject = "盯盘喵：有新猫猫#${salesCat.tokenId}上架了"
+            smm.from = "2502849497@qq.com"
+            // 发送日期
+            smm.sentDate = Date() //2022-03-01 10:11:47
+            // 要发给的邮箱(收件人)
+            smm.setTo(email)
+            // 抄送邮箱
+//                smm.setCc("442311638@qq.com")
+            // 邮件内容
+            smm.text = "上架价格：$${salesCat.realPrice()}!"
+            javaMailSender.send(smm)
+            println("上架邮件发送成功:$email")
 //                return true
-            } catch (e: Exception) {
-                e.printStackTrace()
-                println("上架发送成功:$email${e.message}")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("上架发送成功:$email${e.message}")
 
-            }
-//            return false
         }
+//            return false
+//        }
 
         return true
     }

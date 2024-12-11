@@ -93,7 +93,7 @@ class CatMonitorTasks {
                     if (newTrades.isNotEmpty()) {
                         println("有新猫猫架了：")
                         println("上架信息动态：" + newTrades.joinToString())
-                        SmsManager.sendNewOnSalesCatSms(newTrades)
+//                        SmsManager.sendNewOnSalesCatSms(newTrades)
                         mailManager.sendNewOnSalesCatEmails(newTrades)
 
                     } else {
