@@ -152,6 +152,7 @@ object SmsManager {
             tokenId = "5446",
             status = "active",
             orderType = "BuyNow",
+            image = "https://static.coinall.ltd/cdn/nft/files/d69dbf6f-bf5c-412f-8d92-7c2f7912d1bd.webp/type=detail"
         )
         return sendOneNewOnSalesCatSms(salesCat)
     }

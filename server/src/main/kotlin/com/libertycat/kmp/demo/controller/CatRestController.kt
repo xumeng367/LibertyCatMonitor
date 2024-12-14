@@ -67,12 +67,22 @@ class CatRestController {
     }
 
     /**
-     * 查询成交记录
+     * 查询上架记录
      */
     @GetMapping("/test/email")
-    suspend fun testMails(): Boolean {
+    suspend fun testMails(): String {
         val result = catMonitorTasks.testSendOnSalesEmails()
-        return result
+        return "发送上架邮件"
     }
+
+    /**
+     * 查询成交记录
+     */
+    @GetMapping("/test/email2")
+    suspend fun testMails2(): String {
+        val result = catMonitorTasks.testSendTradesEmails()
+        return "发送成交邮件"
+    }
+
 
 }

@@ -112,25 +112,25 @@ class CatMonitorTasks {
         println("Spring启动后，执行成交查询服务")
         startQueryTradesHistoryTask()
         startQueryOnSalesListTask()
+        println("path = ${OkxHttpRepository.getRootPath()}")
     }
 
 
-    fun testSendTradesEmails(): Boolean {
+    suspend fun testSendTradesEmails() {
         val data = lastTradesHistory?.data?.data
         if (data != null && data.size > 0) {
             val lastLatestTrade = data.maxBy { it.timestamp }
-            return mailManager.sendTradeMail(lastLatestTrade)
+            mailManager.sendTradeMail(lastLatestTrade)
         }
-        return false
     }
 
-
-    fun testSendOnSalesEmails(): Boolean {
+    suspend fun testSendOnSalesEmails() {
         val data = lastSalesCatList?.data?.data
         if (data != null && data.size > 0) {
             val lastLatestTrade = data.maxBy { it.updateTime }
-            return mailManager.sendNewOnSalesCatEmail(lastLatestTrade)
+            OkxHttpRepository.downloadImage(lastLatestTrade.image, lastLatestTrade.tokenId)
+            mailManager.sendNewOnSalesCatEmail(lastLatestTrade)
         }
-        return false
     }
+
 }

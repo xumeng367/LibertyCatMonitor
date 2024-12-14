@@ -8,6 +8,9 @@ import kotlin.text.replace
 data class NetWorkResult<out T>(val code: Int, val msg: String, val data: Data<T>? = null)
 
 @Serializable
+data class NetWorkDataResult<out T>(val code: Int, val msg: String, val data: T? = null)
+
+@Serializable
 data class Data<out T>(val cursor: String, val data: List<T>)
 
 @Serializable
@@ -45,6 +48,7 @@ data class SalesCat(
     val tokenId: String,
     val orderType: String,
     val currencyAddress: String,
+    val image: String
 ) {
     /**
      * 是否是买单
@@ -58,6 +62,16 @@ data class SalesCat(
         return tokenAddressToCurrency[currencyAddress] ?: ""
     }
 }
+
+
+@Serializable
+data class NtfDetail(
+    val tokenId: String,
+    val image: String = ""
+) {
+}
+
+
 
 @Serializable
 data class CatAttribute(

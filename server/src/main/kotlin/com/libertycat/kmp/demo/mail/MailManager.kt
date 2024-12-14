@@ -3,10 +3,13 @@ package com.libertycat.kmp.demo.mail
 import com.libertycat.kmp.demo.beans.SalesCat
 import com.libertycat.kmp.demo.beans.Trade
 import com.libertycat.kmp.demo.emailsReceivers
+import com.libertycat.kmp.demo.netwrok.OkxHttpRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.mail.SimpleMailMessage
+import org.springframework.core.io.FileSystemResource
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Component
+import java.io.File
 import java.util.Date
 
 @Component
@@ -14,13 +17,13 @@ class MailManager {
     @Autowired
     private lateinit var javaMailSender: JavaMailSender
 
-    fun sendTradeMails(trades: List<Trade>) {
+    suspend fun sendTradeMails(trades: List<Trade>) {
         trades.forEach { trade ->
             sendTradeMail(trade)
         }
     }
 
-    fun sendNewOnSalesCatEmails(salesCats: List<SalesCat>) {
+    suspend fun sendNewOnSalesCatEmails(salesCats: List<SalesCat>) {
         salesCats.forEach { salesCat ->
             sendNewOnSalesCatEmail(salesCat)
         }
@@ -30,76 +33,83 @@ class MailManager {
     /**
      * 发送成交邮件
      */
-    fun sendTradeMail(trade: Trade): Boolean {
-        emailsReceivers.forEach { email ->
+    suspend fun sendTradeMail(trade: Trade) {
+
+        emailsReceivers.forEach { toEmail ->
             try {
-                println("发送邮件：$trade ，javaMailSender = $javaMailSender")
-                val smm: SimpleMailMessage = SimpleMailMessage()
-                // 主题
-                smm.setSubject("盯盘喵：有新猫猫#${trade.tokenId}成交了")
-                smm.setFrom("2502849497@qq.com")
-                // 发送日期
-                smm.setSentDate(Date()) //2022-03-01 10:11:47
-                // 要发给的邮箱(收件人)
-                smm.setTo(email)
-                // 抄送邮箱
-                smm.setCc("442311638@qq.com")
-                // 邮件内容
-                smm.setText(
-                    "成交价格：$${trade.realPrice()}!订单信息：From:**${trade.from.takeLast(4)}, to:From:**${
+                val ntfInfo = OkxHttpRepository.queryNtfInfo(trade.tokenId)
+                println("ntfInfo = $ntfInfo")
+                sendMails(
+                    subject = "盯盘喵：有新喵喵#${trade.tokenId}成交了",
+                    text = "成交价格：$${trade.realPrice()}!<br>订单信息：<br>From:**${trade.from.takeLast(4)}<br>To  :**${
                         trade.to.takeLast(
                             4
                         )
-                    }"
+                    }",
+                    tokenId = trade.tokenId,
+                    catUrl = ntfInfo.data?.image.toString(),
+                    toMail = toEmail
                 )
-                javaMailSender?.send(smm)
-                println("邮件发送成功:$email")
-//                return true
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
-                println("邮件发送成功:$email${e.message}")
-
+                println("发送图片失败：${e.message}")
             }
-//            return false
         }
-
-        return true
     }
 
 
     /**
      * 发送成交邮件
      */
-    fun sendNewOnSalesCatEmail(salesCat: SalesCat): Boolean {
-//        emailsReceivers.forEach { email ->
-        val email = "442311638@qq.com"
+    suspend fun sendNewOnSalesCatEmail(salesCat: SalesCat) {
+        emailsReceivers.forEach { toEmail ->
+            try {
+                sendMails(
+                    subject = "盯盘喵：有新喵喵#${salesCat.tokenId}上架了",
+                    text = "上架价格：${salesCat.realPrice()}!",
+                    tokenId = salesCat.tokenId,
+                    catUrl = salesCat.image,
+                    toMail = toEmail
+                )
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                println("发送图片失败：${e.message}")
+            }
+        }
+
+    }
+
+    suspend fun sendMails(subject: String, text: String, tokenId: String, catUrl: String, toMail: String) {
         try {
-            println("发送邮件：$salesCat")
-            val smm: SimpleMailMessage = SimpleMailMessage()
+            val downloadImagePath = OkxHttpRepository.downloadImage(catUrl, tokenId)
+            println("图片下载地址：$downloadImagePath")
+//            val smm: SimpleMailMessage = SimpleMailMessage()
+            val message = javaMailSender.createMimeMessage()
+            val helper = MimeMessageHelper(message, true)
             // 主题
-            smm.subject = "盯盘喵：有新猫猫#${salesCat.tokenId}上架了"
-            smm.from = "2502849497@qq.com"
+            helper.setSubject(subject)
+            helper.setFrom("2502849497@qq.com")
             // 发送日期
-            smm.sentDate = Date() //2022-03-01 10:11:47
+            helper.setSentDate(Date())
             // 要发给的邮箱(收件人)
-            smm.setTo(email)
-            // 抄送邮箱
-//                smm.setCc("442311638@qq.com")
-            // 邮件内容
-            smm.text = "上架价格：$${salesCat.realPrice()}!"
-            javaMailSender.send(smm)
-            println("上架邮件发送成功:$email")
+            helper.setTo(toMail)
+            if (downloadImagePath.isEmpty()) {
+                helper.setText(text, true);
+            } else {
+                helper.setText("$text <img src='cid:image'>", true);
+                val file = FileSystemResource(File(downloadImagePath));
+                helper.addInline("image", file);
+            }
+
+            javaMailSender.send(message)
+            println("上架邮件发送成功:$toMail")
 //                return true
         } catch (e: Exception) {
             e.printStackTrace()
-            println("上架发送成功:$email${e.message}")
+            println("上架发送成功:$toMail${e.message}")
 
         }
 //            return false
-//        }
-
-        return true
     }
-
 
 }
