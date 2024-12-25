@@ -87,7 +87,7 @@ class CatMonitorTasks {
                 if (lastOnSalesCatData != null && currentOnSalesData != null && lastOnSalesCatData.isNotEmpty() && currentOnSalesData.isNotEmpty()) {
                     val lastLatestOnSaleCat = lastOnSalesCatData.maxBy { it.updateTime }
                     val newTrades = currentOnSalesData.filter { it.updateTime > lastLatestOnSaleCat.updateTime }
-                    println("执行上架信息查询...$count lastLatestOnSaleCat = isSellOrder = ${lastLatestOnSaleCat.isSellOrder()} currency = ${lastLatestOnSaleCat.currency()} realPrice = ${lastLatestOnSaleCat.realPrice()} ，新发现：${newTrades.size}")
+//                    println("执行上架信息查询...$count lastLatestOnSaleCat = isSellOrder = ${lastLatestOnSaleCat.isSellOrder()} currency = ${lastLatestOnSaleCat.currency()} realPrice = ${lastLatestOnSaleCat.realPrice()} ，新发现：${newTrades.size}")
 //                println("lastOnSalesCatData size = ${lastOnSalesCatData.size} ,  currentOnSalesData size = ${currentOnSalesData.size} ,newTrades = ${newTrades.size}")
 //                println("newTrades: ${newTrades.joinToString()}")
                     if (newTrades.isNotEmpty()) {
