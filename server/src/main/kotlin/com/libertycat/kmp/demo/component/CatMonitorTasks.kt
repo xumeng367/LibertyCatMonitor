@@ -111,7 +111,7 @@ class CatMonitorTasks {
     fun runAfterStartUp() {
         println("Spring启动后，执行成交查询服务")
         startQueryTradesHistoryTask()
-        startQueryOnSalesListTask()
+//        startQueryOnSalesListTask()
         println("path = ${OkxHttpRepository.getRootPath()}")
     }
 
