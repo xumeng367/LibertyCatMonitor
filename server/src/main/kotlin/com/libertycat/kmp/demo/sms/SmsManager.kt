@@ -36,7 +36,7 @@ object SmsManager {
             val jsonObject = JsonObject()
             jsonObject.addProperty("tokenId", trade.tokenId)
 //                jsonObject.addProperty("price", "${trade.realPrice()}-${trade.currency()}")
-            jsonObject.addProperty("price", trade.realPrice())
+            jsonObject.addProperty("price", trade.realPrice() + " ${trade.currency()}")
             jsonObject.addProperty("from", "**${trade.from.takeLast(4)}")
             jsonObject.addProperty("to", "**${trade.to.takeLast(4)}")
             try {
@@ -121,7 +121,7 @@ object SmsManager {
             amount = 1,
             chain = "Polygon",
             collectionAddress = "0x0030f47d6a73bc518cf18fe027ea91dd6b2b6003",
-            currencyAddress = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+            currencyAddress = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
             from = "0x082d3fc3de3d56d0be914f64df1306ff691b5cb5",
             platform = "OKX",
             price = "28572.0",

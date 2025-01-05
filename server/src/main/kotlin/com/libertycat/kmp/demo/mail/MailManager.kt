@@ -41,7 +41,11 @@ class MailManager {
                 println("ntfInfo = $ntfInfo")
                 sendMails(
                     subject = "盯盘喵：有新喵喵#${trade.tokenId}成交了",
-                    text = "成交价格：$${trade.realPrice()}!<br>订单信息：<br>From:**${trade.from.takeLast(4)}<br>To  :**${
+                    text = "成交价格：${trade.realPrice()} ${trade.currency()}!<br>订单信息：<br>From:**${
+                        trade.from.takeLast(
+                            4
+                        )
+                    }<br>To  :**${
                         trade.to.takeLast(
                             4
                         )
