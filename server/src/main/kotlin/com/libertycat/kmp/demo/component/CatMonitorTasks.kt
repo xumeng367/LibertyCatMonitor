@@ -53,7 +53,7 @@ class CatMonitorTasks {
                         "count = $count, lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}"
                     if (newTrades.isNotEmpty()) {
                         println("发现新成交记录：" + newTrades.joinToString())
-                        SmsManager.sendNewTradesSms(newTrades)
+//                        SmsManager.sendNewTradesSms(newTrades)
                         mailManager.sendTradeMails(newTrades)
                     } else {
 //                    println("历史最新：$lastLatestTrade")

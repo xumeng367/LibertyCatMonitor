@@ -1,0 +1,7 @@
+
+
+docker build -t cat .
+docker run -d -p 8080:8080 --name cat-8080 cat
+docker run -d -p 80:80 --name cat-80 cat
+
+docker run -d -p 8080:8080 --name web3-8080 web3
