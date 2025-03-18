@@ -15,4 +15,5 @@ val smsReceivers = listOf<String>(
 val emailsReceivers = listOf<String>(
     "1582607598@qq.com",
     "442311638@qq.com",
+    "1542581567@qq.com"
 )

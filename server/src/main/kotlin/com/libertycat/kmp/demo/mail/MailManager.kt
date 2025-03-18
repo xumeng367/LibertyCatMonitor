@@ -19,7 +19,11 @@ class MailManager {
 
     suspend fun sendTradeMails(trades: List<Trade>) {
         trades.forEach { trade ->
-            sendTradeMail(trade)
+            if (trade.from.isNotEmpty() && trade.to.isNotEmpty()) {
+                sendTradeMail(trade)
+            } else {
+                println("trades不完整：$trade")
+            }
         }
     }
 
