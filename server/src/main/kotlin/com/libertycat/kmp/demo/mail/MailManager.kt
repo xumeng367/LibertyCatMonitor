@@ -22,7 +22,7 @@ class MailManager {
             if (trade.from.isNotEmpty() && trade.to.isNotEmpty()) {
                 sendTradeMail(trade)
             } else {
-                println("trades不完整：$trade")
+                println("trades info：$trade")
             }
         }
     }

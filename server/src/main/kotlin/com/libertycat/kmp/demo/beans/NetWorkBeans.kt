@@ -51,7 +51,7 @@ data class SalesCat(
     val image: String
 ) {
     /**
-     * 是否是买单
+     * isSellOrder
      */
     fun isSellOrder(): Boolean = "BuyNow" == orderType
     fun realPrice(): String {

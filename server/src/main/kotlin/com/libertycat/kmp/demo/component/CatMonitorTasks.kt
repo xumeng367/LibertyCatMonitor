@@ -23,15 +23,15 @@ class CatMonitorTasks {
     @Autowired
     private lateinit var mailManager: MailManager
 
-    var lastTradesHistory: NetWorkResult<Trade>? = null//上次交易记录
-    var lastSalesCatList: NetWorkResult<SalesCat>? = null//上次交易记录
+    var lastTradesHistory: NetWorkResult<Trade>? = null
+    var lastSalesCatList: NetWorkResult<SalesCat>? = null
 
     var tradeQueryLog = ""
     var starQueryTradesInit = false;
     var starQueryOnSaLESInit = false;
     fun startQueryTradesHistoryTask() {
         if (starQueryTradesInit) {
-            println("查询成交服务已启动")
+            println("The inquiry trade service has been activated!!")
             return
         }
         starQueryTradesInit = true
@@ -39,9 +39,8 @@ class CatMonitorTasks {
         var count = 0
         scope.launch {
             while (true) {
-                delay(2000) // 每5秒执行一次
+                delay(2000) // Execute once every 5 seconds
                 println()
-                // 在这里放置你的协程任务代码
                 val tradesHistory = OkxHttpRepository.queryTradesHistory()
                 val lastTradesData = lastTradesHistory?.data?.data
                 val currentTradesData = tradesHistory?.data?.data
@@ -52,7 +51,7 @@ class CatMonitorTasks {
                     tradeQueryLog =
                         "count = $count, lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}"
                     if (newTrades.isNotEmpty()) {
-                        println("发现新成交记录：" + newTrades.joinToString())
+                        println("Discover a new record of trade：" + newTrades.joinToString())
 //                        SmsManager.sendNewTradesSms(newTrades)
                         mailManager.sendTradeMails(newTrades)
                     } else {
@@ -67,7 +66,7 @@ class CatMonitorTasks {
 
     fun startQueryOnSalesListTask() {
         if (starQueryOnSaLESInit) {
-            println("查询上架服务已启动")
+            println("The listing service has been activated.")
             return
         }
         starQueryOnSaLESInit = true
@@ -75,9 +74,8 @@ class CatMonitorTasks {
         var count = 0
         scope.launch {
             while (true) {
-                delay(3000) // 每5秒执行一次
+                delay(3000) // Execute once every 5 seconds
                 println()
-                // 在这里放置你的协程任务代码
                 val currentOnSalesCatList = OkxHttpRepository.queryOnSalesList()
                 val lastOnSalesCatData = lastSalesCatList?.data?.data
                 if (lastOnSalesCatData != null) {
@@ -87,17 +85,14 @@ class CatMonitorTasks {
                 if (lastOnSalesCatData != null && currentOnSalesData != null && lastOnSalesCatData.isNotEmpty() && currentOnSalesData.isNotEmpty()) {
                     val lastLatestOnSaleCat = lastOnSalesCatData.maxBy { it.updateTime }
                     val newTrades = currentOnSalesData.filter { it.updateTime > lastLatestOnSaleCat.updateTime }
-//                    println("执行上架信息查询...$count lastLatestOnSaleCat = isSellOrder = ${lastLatestOnSaleCat.isSellOrder()} currency = ${lastLatestOnSaleCat.currency()} realPrice = ${lastLatestOnSaleCat.realPrice()} ，新发现：${newTrades.size}")
-//                println("lastOnSalesCatData size = ${lastOnSalesCatData.size} ,  currentOnSalesData size = ${currentOnSalesData.size} ,newTrades = ${newTrades.size}")
-//                println("newTrades: ${newTrades.joinToString()}")
                     if (newTrades.isNotEmpty()) {
-                        println("有新猫猫架了：")
-                        println("上架信息动态：" + newTrades.joinToString())
+                        println("new Cat is here：")
+                        println("new Cat info：" + newTrades.joinToString())
 //                        SmsManager.sendNewOnSalesCatSms(newTrades)
                         mailManager.sendNewOnSalesCatEmails(newTrades)
 
                     } else {
-//                    println("历史最新：$lastLatestTrade")
+//                    println("latest info：$lastLatestTrade")
                     }
                 }
                 count++
@@ -109,7 +104,7 @@ class CatMonitorTasks {
 
     @PostConstruct
     fun runAfterStartUp() {
-        println("Spring启动后，执行成交查询服务")
+        println("Spring started, start service")
         startQueryTradesHistoryTask()
 //        startQueryOnSalesListTask()
         println("path = ${OkxHttpRepository.getRootPath()}")

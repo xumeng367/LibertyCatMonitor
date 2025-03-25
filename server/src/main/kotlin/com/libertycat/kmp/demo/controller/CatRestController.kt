@@ -22,26 +22,26 @@ class CatRestController {
     @GetMapping("/startTrades")
     suspend fun startTrades(): String {
         catMonitorTasks.startQueryTradesHistoryTask()
-        println("启动成交查询服务")
-        return "启动成交查询服务"
+        println("Start the trades query service")
+        return "Start the trades query service"
     }
 
     @GetMapping("/startListings")
     suspend fun startListings(): String {
         catMonitorTasks.startQueryOnSalesListTask()
-        println("启动上架查询服务")
-        return "启动上架查询服务"
+        println("Start the listing query service")
+        return "Start the listing query service"
     }
 
 
     @GetMapping("/logs")
     suspend fun logs(): String {
-        println("访问日志了")
+        println("print logs")
         return catMonitorTasks.tradeQueryLog
     }
 
     /**
-     * 查询成交记录
+     * Query trades records
      */
     @GetMapping("/trades")
     suspend fun trades(): String {
@@ -51,7 +51,7 @@ class CatRestController {
 
 
     /**
-     * 查询上架记录
+     * Query lists records
      */
     @GetMapping("/listings")
     suspend fun listings(): String {
@@ -61,28 +61,21 @@ class CatRestController {
 
     @GetMapping("/test/sms")
     suspend fun sendSms(): String {
-        println("发送测试短信")
+        println("test sms")
         val result = SmsManager.testTradesSms()
         return result
     }
 
-    /**
-     * 查询上架记录
-     */
     @GetMapping("/test/email")
     suspend fun testMails(): String {
         val result = catMonitorTasks.testSendOnSalesEmails()
-        return "发送上架邮件"
+        return "send sms emails result: $result"
     }
 
-    /**
-     * 查询成交记录
-     */
     @GetMapping("/test/email2")
     suspend fun testMails2(): String {
         val result = catMonitorTasks.testSendTradesEmails()
-        return "发送成交邮件"
+        return "send trades emails result: $result"
     }
-
 
 }

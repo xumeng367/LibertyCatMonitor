@@ -65,10 +65,10 @@ object OkxHttpRepository {
     val BASE_URL = "www.okx.com"
     val NRF_ASSET_DETAIL = "api/v5/mktplace/nft/asset/detail"//
 
-    //获取合集交易信息 此 API 用于获取 NFT 销售历史信息，如收藏地址，平台，价格，买家和卖家。
+    //Obtain collection transaction information. This API is used to retrieve NFT sales history information, including collection address, platform, price, buyer and seller.
     val NRF_MARKETS_TRADES = "api/v5/mktplace/nft/markets/trades"
 
-    //查询挂单# 该接口用于查询指定 NFT 的有效欧易 Seaport 协议挂单。
+    //Query Order # This interface is used to query the valid Seaport Protocol orders of the specified NFT.
     val NRF_MARKETS_LISTINGS = "api/v5/mktplace/nft/markets/listings"
 
 
@@ -80,7 +80,7 @@ object OkxHttpRepository {
 
 
     /**
-     * 获取历史交易记录
+     * queryTradesHistory
      */
     suspend fun queryTradesHistory(): NetWorkResult<Trade> {
         try {
@@ -111,18 +111,18 @@ object OkxHttpRepository {
             return stringBody
         } catch (e: Throwable) {
             e.printStackTrace()
-            println("网络访问异常：" + e.message)
+            println("Net error：" + e.message)
         }
 
         return NetWorkResult(
             code = 444,
-            msg = "成交查询网络访问异常："
+            msg = "Net error："
         )
 
     }
 
     /**
-     * 查询挂单信息
+     * queryOnSalesList
      */
     suspend fun queryOnSalesList(): NetWorkResult<SalesCat> {
         try {
@@ -154,16 +154,16 @@ object OkxHttpRepository {
             return stringBody
         } catch (e: Throwable) {
             e.printStackTrace()
-            println("网络访问异常：" + e.message)
+            println("Net error：" + e.message)
         }
         return NetWorkResult(
             code = 444,
-            msg = "上架查询网络访问异常："
+            msg = "Net error："
         )
     }
 
     /**
-     * 查询挂单信息
+     * queryNtfInfo
      */
     suspend fun queryNtfInfo(tokenId: String): NetWorkDataResult<NtfDetail> {
         try {
@@ -197,11 +197,11 @@ object OkxHttpRepository {
             return stringBody
         } catch (e: Throwable) {
             e.printStackTrace()
-            println("网络访问异常：" + e.message)
+            println("Net error：" + e.message)
         }
         return return NetWorkDataResult(
             code = 444,
-            msg = "上架查询网络访问异常："
+            msg = "Net error："
         )
     }
 
@@ -215,7 +215,7 @@ object OkxHttpRepository {
     }
 
     suspend fun downloadImage(url: String, tokenId: String): String {
-        println("开始下载图片:$url")
+        println("Start Download picture:$url")
         try {
             val root = File(getRootPath() + "/cats/images")
             if (!root.exists()) {
@@ -223,15 +223,14 @@ object OkxHttpRepository {
             }
             val file = File(root.absolutePath, "${tokenId}.png")
             if (file.exists()) {
-                println("${tokenId}图片已存在，不用下载")
                 return file.absolutePath
             }
             client.get(url).bodyAsChannel().copyAndClose(file.writeChannel())
-            println("下载完成")
+            println("Download Success")
             return file.absolutePath
         } catch (e: Throwable) {
             e.printStackTrace()
-            println("下载失败:${e.message}")
+            println("Download failure:${e.message}")
         }
         return ""
     }
@@ -249,17 +248,16 @@ fun createSignature(data: String, key: String): String {
         return Base64.encode(sha256Hmac.doFinal(data.toByteArray()))
     } catch (e: Throwable) {
         e.printStackTrace()
-        println("创建签名失败")
+        println("Failed to create signature")
     }
     return ""
 }
 
 fun getUTCTime(): String {
-    //当前本地时间Date  对应的  UTC时间String
     val date = Date()
     val tz = TimeZone.getTimeZone("UTC")
     val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    df.timeZone = tz //获取时区
+    df.timeZone = tz //get time zone
     val nowAsISO = df.format(date)
     return nowAsISO
 }
