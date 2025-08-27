@@ -47,15 +47,12 @@ class CatMonitorTasks {
                 if (lastTradesData != null && currentTradesData != null && lastTradesData.isNotEmpty() && currentTradesData.isNotEmpty()) {
                     val lastLatestTrade = lastTradesData.maxBy { it.timestamp }
                     val newTrades = currentTradesData.filter { it.timestamp > lastLatestTrade.timestamp }
-//                println("执行成交信息查询...$count lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}")
                     tradeQueryLog =
                         "count = $count, lastLatestTrade tokenId = ${lastLatestTrade.tokenId} = realPrice = ${lastLatestTrade.realPrice()} ，新发现：${newTrades.size}"
                     if (newTrades.isNotEmpty()) {
                         println("Discover a new record of trade：" + newTrades.joinToString())
-//                        SmsManager.sendNewTradesSms(newTrades)
+                        SmsManager.sendNewTradesSms(newTrades)
                         mailManager.sendTradeMails(newTrades)
-                    } else {
-//                    println("历史最新：$lastLatestTrade")
                     }
                 }
                 count++
@@ -88,7 +85,7 @@ class CatMonitorTasks {
                     if (newTrades.isNotEmpty()) {
                         println("new Cat is here：")
                         println("new Cat info：" + newTrades.joinToString())
-//                        SmsManager.sendNewOnSalesCatSms(newTrades)
+                        SmsManager.sendNewOnSalesCatSms(newTrades)
                         mailManager.sendNewOnSalesCatEmails(newTrades)
 
                     } else {
@@ -106,7 +103,7 @@ class CatMonitorTasks {
     fun runAfterStartUp() {
         println("Spring started, start service")
         startQueryTradesHistoryTask()
-//        startQueryOnSalesListTask()
+        startQueryOnSalesListTask()
         println("path = ${OkxHttpRepository.getRootPath()}")
     }
 

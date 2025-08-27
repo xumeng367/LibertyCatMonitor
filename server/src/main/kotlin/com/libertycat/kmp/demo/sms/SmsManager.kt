@@ -10,12 +10,14 @@ import com.libertycat.kmp.demo.beans.SalesCat
 import com.libertycat.kmp.demo.beans.Trade
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.libertycat.kmp.demo.smsApiKey
 import com.libertycat.kmp.demo.smsReceivers
+import com.libertycat.kmp.demo.smsSecret
 import darabonba.core.client.ClientOverrideConfiguration
 
 
 /**
- * 短信接收人
+ * SMS RECEIVERS
  */
 val smsReceivers = listOf<String>(
     "133********",
@@ -80,8 +82,8 @@ object SmsManager {
         println("phoneNumber = $phoneNumber templateName = $templateName jsonSmsParams = $jsonSmsParams")
         val provider = StaticCredentialProvider.create(
             Credential.builder() // Please ensure that the environment variables ALIBABA_CLOUD_ACCESS_KEY_ID and ALIBABA_CLOUD_ACCESS_KEY_SECRET are set.
-                .accessKeyId("********")
-                .accessKeySecret("********") //.secur
+                .accessKeyId(smsApiKey)
+                .accessKeySecret(smsSecret) //.secur
                 .build()
         )
 
