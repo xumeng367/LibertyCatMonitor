@@ -1,5 +1,7 @@
-<h1 align="center">🐱 LibertyCatMonitor · Server</h1>
-
+<h1 align="center">
+  <img src="libertycat.jpg" width="50" height="50" style="vertical-align:middle; margin-right:10px;">
+  LibertyCatMonitor
+</h1>
 <p align="center">
   <b>Automated NFT monitoring and notification service for LibertyCat Marketplace</b><br>
   <sub>Built with Kotlin Multiplatform · Email & SMS Alerts · REST API · Scheduler</sub>
