@@ -109,6 +109,10 @@ You may also load these dynamically from environment variables or YAML configura
 
 ---
 
+### 📬 Email notification Screenshot
+![App UI](email_screenshot.png)
+---
+
 ### 📬 Email Configuration (`application.yml`)
 
 Configure your SMTP provider:
