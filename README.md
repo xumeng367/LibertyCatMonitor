@@ -64,10 +64,10 @@ It provides a clean modular architecture with background tasks, REST endpoints, 
 ---
 
 ## 💬 Connect with us（Discord Community）
-<h1><img src="img/discord.jpg" alt="App UI"/></h1>
+<h1><img src="img/discord.jpg" alt="App UI" width="480" height="640"/></h1>
 join the Discord Community
-<h1><img src="img/discord_qrcode.jpg" alt="App UI"/></h1>
-
+<h1><img src="img/discord_qrcode.jpg" alt="App UI" width="480" height="640"/></h1>
+---
 
 ## 🧩 Project Structure
 
