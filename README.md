@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="libertycat.jpg" width="50" height="50" style="vertical-align:middle; margin-right:10px;">
+  <img src="img/libertycat.jpg" width="50" height="50" style="vertical-align:middle; margin-right:10px;">
   LibertyCatMonitor
 </h1>
 <p align="center">
@@ -63,6 +63,12 @@ It provides a clean modular architecture with background tasks, REST endpoints, 
 
 ---
 
+## 💬 Connect with us（Discord Community）
+<h1><img src="img/discord.jpg" alt="App UI"/></h1>
+join the Discord Community
+<h1><img src="img/discord_qrcode.jpg" alt="App UI"/></h1>
+
+
 ## 🧩 Project Structure
 
 ```
@@ -110,7 +116,7 @@ You may also load these dynamically from environment variables or YAML configura
 ---
 
 ### 📬 Email notification Screenshot
-![App UI](email_screenshot.png)
+<h1><img src="img/email_screenshot.png" alt="App UI" width="480" height="640"/></h1>
 ---
 
 ### 📬 Email Configuration (`application.yml`)
